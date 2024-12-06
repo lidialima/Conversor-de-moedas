@@ -2,22 +2,31 @@ const convertButton = document.querySelector(".convert-button");
 const fromCurrencySelect = document.querySelector(".from-currency-select"); // Moeda de origem
 const toCurrencySelect = document.querySelector(".to-currency-select"); // Moeda de destino
 
-function convertValues() {
+async function convertValues() {
   const inputCurrencyValue = document.querySelector(".input-currency").value;
   const currencyValueConverted = document.querySelector(".currency-value"); // Resultado da conversão
   const currencyValueToConvert = document.querySelector(".currency-value-to-convert"); // Valor a ser convertido
 
+  //async await
+  const data = await fetch("https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,BTC-BRL").then( Response => Response.json())
+
   // Valores das moedas em relação ao Real
   const rates = {
     BRL: 1,
-    USD: 5.2,
-    EUR: 6.2,
-    GBP: 7.34,
-    BTC: 342.256,
+    USD: data.USDBRL.high,
+    EUR: data.EURBRL.high,
+    GBP: 7.70, // Atualize com valores válidos
+    BTC: data.BTCBRL.high,
   };
 
   const fromRate = rates[fromCurrencySelect.value]; // Valor da moeda de origem
   const toRate = rates[toCurrencySelect.value]; // Valor da moeda de destino
+
+  if (!inputCurrencyValue || isNaN(inputCurrencyValue)) {
+    alert("Por favor, insira um valor válido.");
+    return;
+  }
+  
 
   // Calcula a taxa de conversão
   const conversionRate = toRate / fromRate;
